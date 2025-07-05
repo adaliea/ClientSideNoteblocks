@@ -9,5 +9,5 @@ import org.jetbrains.annotations.Nullable;
 public interface ClientWorldInterface {
 
 
-    void bypassedPlaySound(@Nullable PlayerEntity except, double x, double y, double z, RegistryEntry<SoundEvent> sound, SoundCategory category, float volume, float pitch, long seed);
+    void clientSideNoteblocks$bypassedPlaySound(@Nullable PlayerEntity except, double x, double y, double z, RegistryEntry<SoundEvent> sound, SoundCategory category, float volume, float pitch, long seed);
 }

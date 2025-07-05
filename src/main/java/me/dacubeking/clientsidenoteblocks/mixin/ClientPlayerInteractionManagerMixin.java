@@ -6,8 +6,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -30,8 +32,8 @@ public abstract class ClientPlayerInteractionManagerMixin {
     @Final
     private ClientPlayNetworkHandler networkHandler;
 
-    @Redirect(method = "updateBlockBreakingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sound/SoundManager;play(Lnet/minecraft/client/sound/SoundInstance;)V"))
-    public void cancelBlockBreakSound(SoundManager instance, SoundInstance sound, BlockPos pos, Direction direction) {
+    @Redirect(method = "updateBlockBreakingProgress",  at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sound/SoundManager;play(Lnet/minecraft/client/sound/SoundInstance;)Lnet/minecraft/client/sound/SoundSystem$PlayResult;"))
+    public SoundSystem.PlayResult cancelBlockBreakSound(SoundManager instance, SoundInstance sound, BlockPos pos, Direction direction) {
         World world = this.client.world;
         ClientPlayerEntity player = this.client.player;
         if (!ClientSideNoteblocksClient.isEnabled()
@@ -43,5 +45,6 @@ public abstract class ClientPlayerInteractionManagerMixin {
         } else if (ClientSideNoteblocksClient.isDebug()) {
             ClientSideNoteblocksClient.LOGGER.info("Cancelled block break sound");
         }
+        return null;
     }
 }

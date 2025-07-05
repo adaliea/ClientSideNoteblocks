@@ -119,7 +119,7 @@ public class ClientSideNoteblocksClient implements ClientModInitializer {
                         registryEntry = instrument.getSound();
                     }
 
-                    clientWorldInterface.bypassedPlaySound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, registryEntry, SoundCategory.RECORDS, 3.0f, f, world.random.nextLong());
+                    clientWorldInterface.clientSideNoteblocks$bypassedPlaySound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, registryEntry, SoundCategory.RECORDS, 3.0f, f, world.random.nextLong());
 
 
                     synchronized (NOTEBLOCK_SOUNDS_TO_CANCEL_LOCK) {
