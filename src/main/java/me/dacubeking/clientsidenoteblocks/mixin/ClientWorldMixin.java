@@ -1,21 +1,22 @@
 package me.dacubeking.clientsidenoteblocks.mixin;
 
 import me.dacubeking.clientsidenoteblocks.client.ClientSideNoteblocksClient;
-import me.dacubeking.clientsidenoteblocks.mixininterfaces.ClientLevelInterface;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.storage.WritableLevelData;
+import me.dacubeking.clientsidenoteblocks.mixininterfaces.ClientWorldInterface;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.world.MutableWorldProperties;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,29 +26,30 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import static me.dacubeking.clientsidenoteblocks.client.ClientSideNoteblocksClient.NOTEBLOCK_SOUNDS_TO_CANCEL;
 import static me.dacubeking.clientsidenoteblocks.client.ClientSideNoteblocksClient.NOTEBLOCK_SOUNDS_TO_CANCEL_LOCK;
 
-@Mixin(ClientLevel.class)
-public abstract class ClientLevelMixin extends Level implements ClientLevelInterface {
+@Mixin(ClientWorld.class)
+public abstract class ClientWorldMixin extends World implements ClientWorldInterface {
 
     @Final
     @Shadow
-    private Minecraft minecraft;
+    private MinecraftClient client;
 
     @Shadow
     @Final
-    private static double FLUID_PARTICLE_SPAWN_OFFSET;
+    private static double PARTICLE_Y_OFFSET;
 
 
     // Ignored by Mixin
-    protected ClientLevelMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
-    @Inject(method = "playSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZJ)V", at = @At("HEAD"), cancellable = true)
-    public void playSound(double x, double y, double z, SoundEvent event, SoundSource category, float volume, float pitch, boolean useDistance, long seed, CallbackInfo ci) {
+    @Inject(method = "playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZJ)V", at = @At("HEAD"), cancellable = true)
+    public void playSound(double x, double y, double z, SoundEvent event, SoundCategory category, float volume, float pitch, boolean useDistance, long seed, CallbackInfo ci) {
         BlockPos pos = new BlockPos((int) (x - 0.5), (int) (y - 0.5), (int) (z - 0.5));
 
         if (ClientSideNoteblocksClient.isEnabled()) {
@@ -79,21 +81,21 @@ public abstract class ClientLevelMixin extends Level implements ClientLevelInter
 
     @Override
     public void clientSideNoteblocks$bypassedPlaySound(
-            @Nullable Player except,
+            @Nullable PlayerEntity except,
             double x, double y, double z,
-            Holder<SoundEvent> sound,
-            SoundSource category,
+            RegistryEntry<SoundEvent> sound,
+            SoundCategory category,
             float volume, float pitch, long seed) {
         if (ClientSideNoteblocksClient.isDebug()) {
             ClientSideNoteblocksClient.LOGGER.info("Bypassed played sound");
         }
-        SimpleSoundInstance positionedSoundInstance = new SimpleSoundInstance(sound.value(), category, volume, pitch, RandomSource.create(seed), x, y, z);
+        PositionedSoundInstance positionedSoundInstance = new PositionedSoundInstance(sound.value(), category, volume, pitch, Random.create(seed), x, y, z);
 
-        this.minecraft.getSoundManager().play(positionedSoundInstance);
+        this.client.getSoundManager().play(positionedSoundInstance);
     }
 
     @Shadow
-    private void playSound(double x, double y, double z, SoundEvent event, SoundSource category, float volume, float pitch, boolean useDistance, long seed) {
+    private void playSound(double x, double y, double z, SoundEvent event, SoundCategory category, float volume, float pitch, boolean useDistance, long seed) {
 
     }
 }

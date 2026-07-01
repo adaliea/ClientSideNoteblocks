@@ -1,9 +1,9 @@
 package me.dacubeking.clientsidenoteblocks.mixininterfaces;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.Level;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public interface NoteblockInterface {
-    Identifier clientSideNoteblocks$getCustomSoundPublic(Level world, BlockPos pos);
+    Identifier clientSideNoteblocks$getCustomSoundPublic(World world, BlockPos pos);
 }

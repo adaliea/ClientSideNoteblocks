@@ -1,28 +1,28 @@
 package me.dacubeking.clientsidenoteblocks.mixin;
 
 import me.dacubeking.clientsidenoteblocks.mixininterfaces.NoteblockInterface;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.NoteBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.NoteBlock;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(NoteBlock.class)
 public abstract class NoteblockMixin extends Block implements NoteblockInterface {
-    public NoteblockMixin(Properties settings) {
+    public NoteblockMixin(Settings settings) {
         super(settings);
     }
 
     @Shadow
     @Nullable
-    protected abstract Identifier getCustomSoundId(Level world, BlockPos pos);
+    protected abstract Identifier getCustomSound(World world, BlockPos pos);
 
 
     @Override
-    public Identifier clientSideNoteblocks$getCustomSoundPublic(Level world, BlockPos pos) {
-        return getCustomSoundId(world, pos);
+    public Identifier clientSideNoteblocks$getCustomSoundPublic(World world, BlockPos pos) {
+        return getCustomSound(world, pos);
     }
 }

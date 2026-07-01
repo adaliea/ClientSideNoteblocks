@@ -2,10 +2,10 @@
   "required": true,
   "minVersion": "0.8",
   "package": "me.dacubeking.clientsidenoteblocks.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ClientLevelMixin",
-    "MultiPlayerGameModeMixin",
+    "ClientPlayerInteractionManagerMixin",
+    "ClientWorldMixin",
     "NoteblockMixin"
   ],
   "client": [
