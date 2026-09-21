@@ -100,14 +100,6 @@ public abstract class ClientLevelMixin extends Level implements ClientLevelInter
         this.minecraft.getSoundManager().play(positionedSoundInstance);
     }
 
-    /**
-     * 26.3 moved the block mining sound off MultiPlayerGameMode.continueDestroyBlock and into
-     * ClientLevel.playBreakingSound, which is now the only place it is produced: the first hit
-     * reaches it through addBreakingBlockEffects, and every repeat after that arrives from the
-     * server as level event 2020 (PARTICLES_AND_SOUND_DESTROY_PROGRESS) rather than being
-     * generated client side. Redirecting here therefore covers what the redirect on
-     * continueDestroyBlock used to cover, and nothing else plays that sound any more.
-     */
     @Redirect(method = "playBreakingSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/SoundManager;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;"))
     public SoundEngine.PlayResult cancelBlockBreakSound(SoundManager instance, SoundInstance sound, BlockPos pos, BlockState state) {
         Level world = this.minecraft.level;
