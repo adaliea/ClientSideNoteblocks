@@ -23,7 +23,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -69,7 +68,7 @@ public class ClientSideNoteblocksClient implements ClientModInitializer {
         NOTEBLOCK_SOUNDS_TO_CANCEL = new SelfExpiringHashMap<>((long) (config.maxTimeToServerSound * 1000), 100);
 
 
-        KeyMapping toggleKeybind = KeyMappingHelper.registerKeyMapping(new KeyMapping("Toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_BRACKET, keybindCategory));
+        KeyMapping toggleKeybind = KeyMappingHelper.registerKeyMapping(new KeyMapping("Toggle", InputConstants.Type.KEYBOARD, InputConstants.KEY_LBRACKET, keybindCategory));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (toggleKeybind.consumeClick()) {

@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "ClientLevelMixin",
-    "MultiPlayerGameModeMixin",
     "NoteblockMixin"
   ],
   "client": [
