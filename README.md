@@ -6,6 +6,8 @@ Curseforge: https://www.curseforge.com/minecraft/mc-mods/client-side-noteblocks
 
 Modrinth: https://modrinth.com/mod/clientsidenoteblocks
 
+Maintainers: see [Publishing](.github/PUBLISHING.md) for the manual release workflow and token setup.
+
 # About 
 So I was trying to play a noteblock song in skywars, but playing the song with all of the lag that was caused by my ping made it too hard to play. In the past, I would just mute my sounds in-game and play. This mod will eliminate the lag by having the client play the sound. This also even helps reduce lag when playing noteblocks in singleplayer!
 
